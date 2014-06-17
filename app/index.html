@@ -35,7 +35,7 @@
 
             <div class="jumbotron">
                 <div>
-                    <p> Card Number</p>  <input type="text" class="form-control bfh-number b-col"/>
+                    <p> Card Number</p>  <input type="text" id="cardname" class="form-control "/>
                 </div>
                 <table id="EntryTable">
                     <tr> <th>B</th><th>(L)I</th><th>N</th><th>G</th><th>O</th> </tr>
@@ -53,6 +53,7 @@
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
         <script src="../bower_components/jquery/dist/jquery.js"></script>
+        <script src="../bower_components/jquery.cookie/jquery.cookie.js"></script>
         <!-- endbower -->
         <!-- endbuild -->
 
@@ -82,6 +83,7 @@
         <!-- endbuild -->
 
         <!-- build:js({app,.tmp}) scripts/main.js -->
+        <script src="scripts/database.js"></script>
         <script src="scripts/main.js"></script>
         <!-- endbuild -->
 </body>

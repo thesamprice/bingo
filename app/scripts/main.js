@@ -33,8 +33,9 @@ for(row = 0; row< 5; row++)
     {
        var colEl = document.createElement('td')
        $(colEl).attr({'class':'col-' + col})
-       var inputEl = BuildCol(col) 
        
+       var inputEl = BuildCol(col) 
+       $(inputEl).val(row_ranges[col][0]+row)
        $(inputEl).attr({'row':row,'col':col}) 
        $(colEl).append(inputEl)
        $(rowEl).append(colEl)
@@ -42,9 +43,15 @@ for(row = 0; row< 5; row++)
 }
 $('.row-2 .col-2').text('FREE')
 
-function ValidateCard()
+function ValidateCardName()
 {
-   var card_number = $()
+   var card_name = $('#cardname').val();
+   if(card_name==''){
+       alert('Card name cant be ""');
+       return false;
+   }
+   return true; 
+   alert(card_name)
 }
 function ValidateNumbers()
 {
@@ -71,13 +78,34 @@ function ValidateNumbers()
    return true;
 }
 
-
+function BuildCard()
+{
+    var numbers = []
+    for(row=0;row<5;row++)
+    {
+        
+        var used_numbers = [] 
+        for(col=0;col<5;col++)
+        {
+            var selector = 'tr.row-' + row 
+            selector = selector + ' td.col-' + col
+            selector = selector + ' select'
+            number = $(selector).val()
+            used_numbers.push(number)
+        }
+        numbers.push(used_numbers);
+    }
+    card_name = $('#cardname').val();
+    alert(numbers)
+    database['cards'][cardname] = numbers;
+}
 $('#EnterCallback').click(function ()
 {
-   if(ValidateCard() == false)
+   if(ValidateCardName() == false)
        return;
    if(ValidateNumbers() == false)
        return;
    /*Paul save them numbers */
+   BuildCard()
    alert('Saved card');
 });

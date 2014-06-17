@@ -20,7 +20,7 @@ module.exports = function (grunt) {
         app: 'app',
         dist: 'dist'
     };
-
+  grunt.loadNpmTasks('grunt-include-source');
     // Define the configuration for all the tasks
     grunt.initConfig({
 
