@@ -1,3 +1,16 @@
+var gah = undefined;
+$('#HeadNav li a').click(function( e )
+{
+     node = e.target;
+     $('#PageEntry').hide()
+     $('#PageSelect').hide()
+     $('#PagePlay').hide()
+     $('#PageStats').hide()
+
+     var href = $(node).attr('href');
+     $(href).show()
+})
+
 
 /* Startup Build board */
 var table = $('#EntryTable');
@@ -51,7 +64,6 @@ function ValidateCardName()
        return false;
    }
    return true; 
-   alert(card_name)
 }
 function ValidateNumbers()
 {
@@ -80,24 +92,26 @@ function ValidateNumbers()
 
 function BuildCard()
 {
-    var numbers = []
-    for(row=0;row<5;row++)
+    var col_num = Array(5) 
+    for(col=0;col<5;col++)
     {
-        
-        var used_numbers = [] 
-        for(col=0;col<5;col++)
+        var row_num = Array(5) 
+        for(row=0;row<5;row++)
         {
-            var selector = 'tr.row-' + row 
+        
+           var selector = 'tr.row-' + row 
             selector = selector + ' td.col-' + col
             selector = selector + ' select'
-            number = $(selector).val()
-            used_numbers.push(number)
+            var number = parseInt($(selector).val())
+            if(number == undefined)
+                number = -1
+            row_num[row] = number
         }
-        numbers.push(used_numbers);
+        col_num[col] = row_num;
     }
     card_name = $('#cardname').val();
-    alert(numbers)
-    database['cards'][cardname] = numbers;
+    database['cards'][card_name] = col_num;
+    DatabaseSave()
 }
 $('#EnterCallback').click(function ()
 {
@@ -107,5 +121,159 @@ $('#EnterCallback').click(function ()
        return;
    /*Paul save them numbers */
    BuildCard()
+   SelectCardsPopulate();
    alert('Saved card');
 });
+
+
+function SelectCardsPopulate()
+{
+    /*TODO Save off currently selected cards ... */
+    $('#PageSelect').empty()
+    for (var key in database['cards']) {
+        var sp = document.createElement('div');
+        $(sp).text(key);
+
+        var card_num = document.createElement('input');
+        $(card_num).attr({'type':'checkbox','data-label':key,'class':'SelectCardCheck'})
+        $(sp).append(card_num)
+        $('#PageSelect').append(sp)
+        $(card_num).text(key);
+    }
+}
+SelectCardsPopulate();
+var SelectedCards=[]
+var SelectedCardNames = []
+function SelectCurrentCards()
+{
+   SelectedCards=[]
+   SelectedCardNames = []
+   var elems = $('.SelectCardCheck:checked')
+   var count = elems.length;
+   elems.each(function(i,obj){
+       key = $(obj).text()
+       SelectedCardNames.push(key) 
+       SelectedCards.push(database['cards'][key])
+       if(i == count-1)
+       {
+           PlayModeBuild();
+       }
+   });
+}
+
+$('#PagePlayHit').click(function()
+{
+    SelectCurrentCards();
+});
+function PlayBuildCard(card_name,card)
+{
+
+      html_card = $('#PlayCardDefault').clone()
+     $(html_card).attr({'id':card_name}).show()
+     $('#PlayCards').append(html_card)
+     $('#'+card_name + ' h4.PlayCardName').text(card_name)
+     for(col=0;col<5;col++)
+     {
+         for(row=0;row<5;row++)
+         {
+             num = card[col][row]
+             selector = '#' +card_name +' .card-col-'+col + '.card-row-' + row
+             $(selector).addClass('card-num-'+num)
+         }
+     }
+}
+function PlayModeBuild()
+{
+    $('#PlayCards').empty()
+   var Cols = Array(5)
+   for(x =0;x<5;x++)
+   {
+       Cols[x] = Array()
+   }
+   for( x in SelectedCards)
+   {
+       card = SelectedCards[x];
+       card_name = SelectedCardNames[x]
+       PlayBuildCard(card_name,card)
+       for(col = 0;col<5;col++)
+       {
+           for(row=0;row<5;row++)
+           {
+               num = card[col][row];
+                if(isNaN(num))
+                    continue
+               if($.inArray(num,Cols[col]) == -1)
+               {
+                   Cols[col].push(num)
+               }
+           }
+       }
+   }
+   for(col=0;col<5;col++)
+   {
+      Cols[col] = Cols[col].sort(function(a, b){return a-b})
+      var name = '#Play-' + col
+      $(name).empty()
+      for(i in Cols[col])
+      {
+          var num = Cols[col][i]
+          var sp = document.createElement('div');
+          $(sp).text(num);
+              
+        var card_num = document.createElement('input');
+        $(card_num).attr({'type':'checkbox','value':num,'class':'PlayCheck'})
+        $(sp).append(card_num)
+
+        $(name).append(sp) 
+      }
+   }
+   $('.PlayCheck').change(PlayCheckCallback)
+
+   $('.card-col-2.card-row-2').addClass('cardcellOn')
+   CalledNumbers = Array()
+
+}
+
+var CalledNumbers = Array()
+function PlayCheckCallback(obj)
+{
+ var obj =  $(obj.target) 
+  var num = parseInt(obj.val())
+ 
+  if(obj.prop('checked'))
+  {
+
+      if($.inArray(num,CalledNumbers) == -1)
+      {
+
+        CalledNumbers.push(num)
+        $('.card-num-'+num).addClass('cardcellOn')
+
+      }
+  }
+  else
+  {
+      var index = CalledNumbers.indexOf(num);
+      if (index > -1) {
+              CalledNumbers.splice(index, 1);
+      }
+      $('.card-num-'+num).removeClass('cardcellOn')
+  }
+}
+
+
+
+for(row=0;row<5;row++)
+{
+    var rel = document.createElement('tr')
+    $('#PlayCardDefault .PlayCardTable').append(rel);
+    for(col=0;col<5;col++)
+    {
+        var cel = document.createElement('td')
+        $(rel).append(cel)
+        var classname = 'cardcell card-col-'+col+' card-row-'+row
+        $(cel).attr({'class':classname})
+        
+    }
+}
+$('#PlayCardDefault').hide()

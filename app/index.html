@@ -24,31 +24,68 @@
 
         <div class="container">
             <div class="header">
-                <ul class="nav nav-pills pull-right">
-                    <li class="active"><a href="#">Entery Mode</a></li>
-                    <li><a href="#">Select Cards</a></li>
-                    <li><a href="#">Play Mode</a></li>
-                    <li><a href="#">Stats</a></li>
+                <ul id="HeadNav" class="nav nav-pills pull-right">
+                    <li><a href="#PageEntry">Entery Mode</a></li>
+                    <li><a href="#PageSelect">Select Cards</a></li>
+                    <li><a id="PagePlayHit" href="#PagePlay">Play Mode</a></li>
+                    <li><a href="#PageStats">Stats</a></li>
                 </ul>
                 <h3 class="text-muted">Bingo</h3>
             </div>
+            <div id="PageEntry">
+                <div class="jumbotron">
+                    <div>
+                        <p> Card Number</p>  <input type="text" id="cardname" class="form-control "/>
+                    </div>
+                    <table id="EntryTable">
+                        <tr> <th>B</th><th>(L)I</th><th>N</th><th>G</th><th>O</th> </tr>
 
-            <div class="jumbotron">
-                <div>
-                    <p> Card Number</p>  <input type="text" id="cardname" class="form-control "/>
+                    </table>
+                    <p><a id="EnterCallback" class="btn btn-lg btn-success" href="#">Submit Card <span class="glyphicon glyphicon-ok"></span></a></p>
                 </div>
-                <table id="EntryTable">
-                    <tr> <th>B</th><th>(L)I</th><th>N</th><th>G</th><th>O</th> </tr>
+            </div>
+            <div id="PageSelect">
+            </div>
+            <div id="PagePlay">
+                <div class="row">
+                    <div class="col-md-1">
+                        <h3>B</h3>
+                        <div id="Play-0"></div>
+                    </div>
+                    <div class="col-md-1">
+                        <h3>I</h3>
 
-                </table>
-                <p><a id="EnterCallback" class="btn btn-lg btn-success" href="#">Submit Card <span class="glyphicon glyphicon-ok"></span></a></p>
+                        <div id="Play-1"></div>
+                    </div>
+                    <div class="col-md-1">
+                        <h3>N</h3>
+                        <div id="Play-2"></div>
+                    </div>
+                     <div class="col-md-1">
+                        <h3>G</h3>
+                        <div id="Play-3"></div>
+                    </div>
+                    <div class="col-md-1">
+                        <h3>O</h3>
+                        <div id="Play-4"></div>
+                    </div>
+                </div>
+                <div id="PlayCards">
+                    
+                </div> 
+
+            </div>
+            <div id="PageStats">
             </div>
             <div class="footer">
                 <p><span class="glyphicon glyphicon-heart"></span> Have you seen my poster?</p>
             </div>
-
+        
+            <span id="PlayCardDefault">
+                <h4 class="PlayCardName"></h4>
+                <table class="PlayCardTable"></table>
+            </span>
         </div>
-
 
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->

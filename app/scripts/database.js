@@ -1,4 +1,5 @@
 var database=$.cookie('db');
+//var database=undefined;
 /*Paul or someone upgrade this to mongo?*/
 function DatabaseBuild()
 {
@@ -12,10 +13,15 @@ function DatabaseBuild()
 }
 function DatabaseSave()
 {
-    $.cookie('db',database);
+    var dat = JSON.stringify(database)
+    $.cookie('db',dat,{'path':'/'});
 }
 if( database == undefined)
 {
    database = DatabaseBuild()
    DatabaseSave();
+}
+else
+{
+    database = JSON.parse(database);
 }
