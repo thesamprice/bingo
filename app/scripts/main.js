@@ -216,7 +216,9 @@ function PlayModeBuild()
       $(name).empty()
       for(i in Cols[col])
       {
-          var num = Cols[col][i]
+          var num = parseInt( Cols[col][i])
+          if(isNaN(num))
+              continue
           var sp = document.createElement('div');
           $(sp).text(num);
               
@@ -248,7 +250,7 @@ function PlayCheckCallback(obj)
 
         CalledNumbers.push(num)
         $('.card-num-'+num).addClass('cardcellOn')
-
+        CheckCards();
       }
   }
   else
@@ -259,6 +261,98 @@ function PlayCheckCallback(obj)
       }
       $('.card-num-'+num).removeClass('cardcellOn')
   }
+}
+
+function CheckCards()
+{
+  var Winner  = false;
+   for( x in SelectedCards)
+   {
+       card = SelectedCards[x];
+       card_name = SelectedCardNames[x]
+     
+       /* Check Cols */
+       for(col = 0;col<5;col++)
+       {
+           Winner = true;
+           query = '#' + card_name + ' .card-col-' + col
+           for(row=0;row<5;row++)
+           {
+              query2 = query + '.card-row-' + row
+              if(false == $(query2).hasClass('cardcellOn'))
+              {
+                Winner = false;
+                break;
+              }
+
+           }
+           if(Winner == true)
+           {
+              alert( card_name)
+           }
+       }
+
+        /* Check Cols */
+       for(row = 0;row<5;row++)
+       {
+           Winner = true;
+           query = '#' + card_name + ' .card-col-' + col
+           for(col=0;col<5;col++)
+           {
+              query2 = query + '.card-row-' + row
+              if(false == $(query2).hasClass('cardcellOn'))
+              {
+                Winner = false;
+                break;
+              }
+
+           }
+           if(Winner == true)
+           {
+              alert( card_name)
+              return;
+           }
+       }
+
+        var diag = [[0,0],[1,1],[3,3],[4,4]];
+        Winner = true;
+        for( i = 0;i<4; i++)
+        {
+           col = diag[i][0]
+           row = diag[i][1]
+           query = '#' + card_name + ' .card-col-' + col
+           query2 = query + '.card-row-' + row
+           if(false == $(query2).hasClass('cardcellOn'))
+           {
+              Winner = false;
+              break;
+            }
+        }
+        if(Winner == true)
+        {
+          alert( card_name)
+          return;
+        }
+    var diag = [[0,4],[1,3],[3,1],[4,0]];
+        Winner = true;
+        for( i = 0;i<4; i++)
+        {
+           col = diag[i][0]
+           row = diag[i][1]
+           query = '#' + card_name + ' .card-col-' + col
+           query2 = query + '.card-row-' + row
+           if(false == $(query2).hasClass('cardcellOn'))
+           {
+              Winner = false;
+              break;
+            }
+        }
+        if(Winner == true)
+        {
+          alert( card_name)
+          return;
+        }
+   }
 }
 
 

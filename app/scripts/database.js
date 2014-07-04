@@ -14,7 +14,7 @@ function DatabaseBuild()
 function DatabaseSave()
 {
     var dat = JSON.stringify(database)
-    $.cookie('db',dat,{'path':'/'});
+    $.cookie('db',dat,{path:'/', expires:365});
 }
 if( database == undefined)
 {
